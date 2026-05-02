@@ -288,14 +288,25 @@ function SettingsTab({ settings, onRefresh }: { settings: Settings; onRefresh: (
   const [slots, setSlots] = useState<string[]>(settings.pickupSlots);
   const [newSlot, setNewSlot] = useState("");
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [saveOk, setSaveOk] = useState(false);
 
   useEffect(() => { setSlots(settings.pickupSlots); }, [settings]);
 
   async function save() {
     setSaving(true);
-    await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pickupSlots: slots }) });
-    setSaving(false);
-    onRefresh();
+    setSaveError("");
+    setSaveOk(false);
+    try {
+      const res = await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pickupSlots: slots }) });
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      setSaveOk(true);
+      onRefresh();
+    } catch (err) {
+      setSaveError(String(err));
+    } finally {
+      setSaving(false);
+    }
   }
 
   function addSlot() {
@@ -327,9 +338,13 @@ function SettingsTab({ settings, onRefresh }: { settings: Settings; onRefresh: (
         <button onClick={addSlot} className="px-4 py-2 rounded-xl text-sm font-semibold text-white flex-shrink-0" style={{ background: "#333" }}>Add</button>
       </div>
 
-      <button onClick={save} disabled={saving} className="gradient-btn text-white font-bold px-6 py-2.5 rounded-xl text-sm disabled:opacity-60">
-        {saving ? "Saving..." : "Save pickup slots"}
-      </button>
+      <div className="flex items-center gap-4">
+        <button onClick={save} disabled={saving} className="gradient-btn text-white font-bold px-6 py-2.5 rounded-xl text-sm disabled:opacity-60">
+          {saving ? "Saving..." : "Save pickup slots"}
+        </button>
+        {saveOk && <span className="text-sm text-green-400">Saved!</span>}
+        {saveError && <span className="text-sm text-red-400">{saveError}</span>}
+      </div>
     </div>
   );
 }
