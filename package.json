@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "framer-motion": "^11.3.24",
+    "heic-convert": "^2.1.0",
     "next": "^14.2.35",
     "react": "^18",
     "react-dom": "^18",
