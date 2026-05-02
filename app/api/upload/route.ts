@@ -29,11 +29,11 @@ export async function POST(req: Request) {
       .toBuffer();
 
     const filename = `${uuidv4()}.jpg`;
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    const uploadsDir = path.join(process.cwd(), "data", "uploads");
     await mkdir(uploadsDir, { recursive: true });
     await writeFile(path.join(uploadsDir, filename), converted);
 
-    return NextResponse.json({ url: `/uploads/${filename}` });
+    return NextResponse.json({ url: `/api/uploads/${filename}` });
   } catch (err) {
     console.error("Upload error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
