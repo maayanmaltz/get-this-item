@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import type { Item, Photo, Request, Settings } from "@/lib/types";
 
-const SELLER_PASSWORD = process.env.NEXT_PUBLIC_SELLER_PASSWORD || "melbourne2024";
+const SELLER_PASSWORD = process.env.NEXT_PUBLIC_SELLER_PASSWORD || "iloveclaude";
 
 // ─── Tiny helpers ─────────────────────────────────────────────────────────────
 
